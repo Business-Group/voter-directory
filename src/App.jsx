@@ -25,7 +25,6 @@ export default function App() {
   useEffect(() => {
     const updateFbWidth = () => {
       const screenWidth = window.innerWidth;
-      // If mobile, take screen width minus some padding. If PC, max out at 500px.
       if (screenWidth < 540) {
         setFbWidth(Math.max(180, screenWidth - 32)); 
       } else {
@@ -140,7 +139,8 @@ export default function App() {
       {/* 0. INITIAL PRELOADER SCREEN */}
       {showPreloader && (
         <div 
-          className={`fixed inset-0 z-50 flex items-center justify-center bg-[#fafbfc] transition-opacity duration-500 ease-in-out ${
+          /* FIXED: Boosted z-index from 50 to 9999 so nothing can overlap it */
+          className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#fafbfc] transition-opacity duration-500 ease-in-out ${
             loaderPhase === 'fading' ? 'opacity-0' : 'opacity-100'
           }`}
         >
@@ -192,15 +192,15 @@ export default function App() {
             <div className="animate-marquee font-heading font-bold tracking-widest text-xs md:text-sm uppercase flex items-center">
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
               <span className="mx-8 text-white">•</span>
-              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER GCCI ELECTION 2026-2028</span>
+              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER CHAMBER</span>
               <span className="mx-8 text-white">•</span>
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
               <span className="mx-8 text-white">•</span>
-              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER GCCI ELECTION 2026-2028</span>
+              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER CHAMBER</span>
               <span className="mx-8 text-white">•</span>
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
               <span className="mx-8 text-white">•</span>
-              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER GCCI ELECTION 2026-2028</span>
+              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER CHAMBER</span>
             </div>
           </div>
 
@@ -209,8 +209,8 @@ export default function App() {
             
             {/* LOGO, TITLE, AND ELECTION TEXT */}
             <div className="flex items-center mb-3 md:mb-0 w-full md:w-auto justify-center md:justify-start">
-              {/* Logo */}
-              <img src="/logo.png" alt="Business Group Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain rounded-full mr-2 md:mr-3" />
+              {/* FIXED: Removed the / from logo.png */}
+              <img src="logo.png" alt="Business Group Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain rounded-full mr-2 md:mr-3" />
               
               <div className="flex items-center">
                 {/* Title */}
@@ -272,8 +272,9 @@ export default function App() {
           
           {/* Mobile Image (Visible only on mobile) */}
           <div className="w-full block md:hidden h-[300px] sm:h-[400px] overflow-hidden">
+            {/* FIXED: Removed the / from frontal3.jfif */}
             <img 
-              src="/frontal3.jfif" 
+              src="frontal3.jfif" 
               alt="Business Group Leaders" 
               className="w-full h-full object-cover object-[80%_top]"
             />
@@ -281,8 +282,9 @@ export default function App() {
 
           {/* Desktop Background Image (Hidden on mobile) */}
           <div className="hidden md:block absolute inset-0 z-0 bg-[#0d2136]">
+            {/* FIXED: Removed the / from frontal3.jfif */}
             <img 
-              src="/frontal3.jfif" 
+              src="frontal3.jfif" 
               alt="Business Group Leaders" 
               className="w-full h-full object-cover object-right translate-x-[5%] lg:translate-x-[10%]"
             />
@@ -312,7 +314,7 @@ export default function App() {
               
               {/* Sub Headline */}
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 md:text-gray-100 mb-6 drop-shadow-md">
-                Rana Farhan Asghar <span className="block md:inline font-medium text-lg md:text-2xl text-gray-500 md:text-gray-300">As Executive Member</span>
+                Waqas Afzal Mughal <span className="block md:inline font-medium text-lg md:text-2xl text-gray-500 md:text-gray-300">As President</span>
               </h2>
               
               {/* Magic: Tagline with golden border */}
@@ -529,7 +531,8 @@ export default function App() {
                             </div>
 
                             <div className="flex items-center gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                               <img src="/farhan.jpeg" alt="Rana Farhan Asghar" className="w-14 h-14 rounded-full object-cover border-2 border-brand-primary bg-white" />
+                               {/* FIXED: Removed the / from farhan.jpeg */}
+                               <img src="farhan.jpeg" alt="Rana Farhan Asghar" className="w-14 h-14 rounded-full object-cover border-2 border-brand-primary bg-white" />
                                <div>
                                   <h4 className="font-bold text-brand-dark text-lg">Vote for Rana Farhan Asghar</h4>
                                   <p className="text-gray-600 text-xs md:text-sm mt-1">For Executive Member, GCCI 2026–2028 · Business Group Gujranwala</p>
