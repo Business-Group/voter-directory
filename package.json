@@ -2,6 +2,7 @@
   "name": "voter-directory",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://Business-Group.github.io/voter-directory/",
   "type": "module",
   "scripts": {
   "dev": "vite",
