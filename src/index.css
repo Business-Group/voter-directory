@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;900&family=Poppins:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Define custom fonts */
+  --font-sans: 'Poppins', sans-serif;
+  --font-heading: 'Fira Sans', sans-serif;
+
+  /* Define your brand color palette */
+  --color-brand-primary: #0033a0;
+  --color-brand-dark: #001f5b;
+  --color-brand-sky: #0ea5e9;
+  --color-brand-skyLight: #e0f2fe;
+  --color-brand-gold: #d4af37;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: var(--color-brand-dark);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
