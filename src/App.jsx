@@ -139,7 +139,6 @@ export default function App() {
       {/* 0. INITIAL PRELOADER SCREEN */}
       {showPreloader && (
         <div 
-          /* FIXED: Boosted z-index from 50 to 9999 so nothing can overlap it */
           className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#fafbfc] transition-opacity duration-500 ease-in-out ${
             loaderPhase === 'fading' ? 'opacity-0' : 'opacity-100'
           }`}
@@ -192,15 +191,15 @@ export default function App() {
             <div className="animate-marquee font-heading font-bold tracking-widest text-xs md:text-sm uppercase flex items-center">
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
               <span className="mx-8 text-white">•</span>
-              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER CHAMBER</span>
+              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER GCCI ELECTIONS 2026-2028</span>
               <span className="mx-8 text-white">•</span>
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
               <span className="mx-8 text-white">•</span>
-              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER CHAMBER</span>
+              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER GCCI ELECTIONS 2026-2028</span>
               <span className="mx-8 text-white">•</span>
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
               <span className="mx-8 text-white">•</span>
-              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER CHAMBER</span>
+              <span className="mx-8 whitespace-nowrap">VICTORY FOR RANA FARHAN AS EXECUTIVE MEMBER GCCI ELECTIONS 2026-2028</span>
             </div>
           </div>
 
@@ -209,7 +208,6 @@ export default function App() {
             
             {/* LOGO, TITLE, AND ELECTION TEXT */}
             <div className="flex items-center mb-3 md:mb-0 w-full md:w-auto justify-center md:justify-start">
-              {/* FIXED: Removed the / from logo.png */}
               <img src="logo.png" alt="Business Group Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain rounded-full mr-2 md:mr-3" />
               
               <div className="flex items-center">
@@ -267,66 +265,64 @@ export default function App() {
         </div>
         {/* ========================================= */}
 
-        {/* 2. HERO SECTION (Redesigned with Fixed Gradient & New Text) */}
-        <section className="relative w-full bg-[#fafbfc] overflow-hidden no-print flex flex-col md:block border-b border-gray-200">
+        {/* 2. HERO SECTION (Responsive Images: Mobile vs Desktop) */}
+        <section className="relative w-full bg-white overflow-hidden no-print flex flex-col border-b border-gray-200">
           
-          {/* Mobile Image (Visible only on mobile) */}
-          <div className="w-full block md:hidden h-[300px] sm:h-[400px] overflow-hidden">
-            {/* FIXED: Removed the / from frontal3.jfif */}
+          {/* IMAGE CONTAINER */}
+          {/* Dynamic height scales smoothly from phones up to 4K desktop monitors */}
+          <div className="w-full h-[350px] sm:h-[450px] md:h-[500px] lg:h-[600px] xl:h-[700px] relative bg-[#82cbed]">
+            
+            {/* 📱 MOBILE IMAGE: frontal4.jpg */}
+            {/* Shows by default, hides on medium (md) screens and larger */}
             <img 
-              src="frontal3.jfif" 
-              alt="Business Group Leaders" 
-              className="w-full h-full object-cover object-[80%_top]"
+              src="frontal4.jpg" 
+              alt="Business Group Leaders Mobile" 
+              className="w-full h-full object-cover object-bottom md:hidden drop-shadow-md"
+            />
+
+            {/* 💻 DESKTOP IMAGE: frontal5.jfif */}
+            {/* Hidden by default, shows on medium (md) screens and larger */}
+            <img 
+              src="frontal5.jfif" 
+              alt="Business Group Leaders Desktop" 
+              className="hidden md:block w-full h-full object-cover object-bottom drop-shadow-md"
             />
           </div>
 
-          {/* Desktop Background Image (Hidden on mobile) */}
-          <div className="hidden md:block absolute inset-0 z-0 bg-[#0d2136]">
-            {/* FIXED: Removed the / from frontal3.jfif */}
-            <img 
-              src="frontal3.jfif" 
-              alt="Business Group Leaders" 
-              className="w-full h-full object-cover object-right translate-x-[5%] lg:translate-x-[10%]"
-            />
-            {/* FIXED GRADIENT: Only covers the left side, fading to transparent before touching the people */}
-            <div className="absolute inset-y-0 left-0 w-[75%] bg-gradient-to-r from-[#0d2136] via-[#0d2136]/90 to-transparent"></div>
-          </div>
-
-          {/* TEXT CONTENT (Overlaid on Desktop, Bottom on Mobile) */}
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-12 md:py-28 flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="w-full md:w-3/5 lg:w-1/2 flex flex-col items-center md:items-start">
-              
-              {/* Magic: Arabic Verse */}
-              <h3 className="font-heading font-bold text-[#cda03f] md:text-[#cda03f] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 drop-shadow-md">
-                نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
-              </h3>
-              
-              {/* Tag/Badge */}
-              <div className="inline-block bg-[#1877F2] md:bg-[#cda03f] text-white md:text-[#0d2136] font-bold px-4 py-1.5 rounded-sm text-xs md:text-sm mb-6 tracking-widest uppercase shadow-md">
-                GCCI Elections 2026–2028
-              </div>
-              
-              {/* Primary Headline */}
-              <h1 className="font-heading text-5xl md:text-5xl lg:text-7xl font-black text-gray-900 md:text-white tracking-tight leading-none mb-3 drop-shadow-lg uppercase">
-                Vote For <br className="hidden lg:block"/>
-                <span className="text-[#1877F2] md:text-[#cda03f]">Business Group</span>
-              </h1>
-              
-              {/* Sub Headline */}
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 md:text-gray-100 mb-6 drop-shadow-md">
-                Waqas Afzal Mughal <span className="block md:inline font-medium text-lg md:text-2xl text-gray-500 md:text-gray-300">As President</span>
-              </h2>
-              
-              {/* Magic: Tagline with golden border */}
-              <p className="font-sans text-gray-700 md:text-gray-200 text-lg md:text-xl font-medium max-w-lg mb-10 leading-relaxed drop-shadow-sm md:border-l-4 md:border-[#cda03f] md:pl-4 italic">
-                "Together We Stand, Together We Rise."
-              </p>
-              
-              <a href="#directory" className="inline-block bg-[#1877F2] md:bg-[#cda03f] text-white md:text-[#0d2136] font-sans font-bold uppercase text-xs md:text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:scale-105 transition-all duration-300">
-                Retrieve Your Data Now
-              </a>
-
+          {/* TEXT CONTENT (Centered below the image) */}
+          <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 flex flex-col items-center text-center bg-white">
+            
+            {/* Arabic Verse */}
+            <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 drop-shadow-sm">
+              نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
+            </h3>
+            
+            {/* Tag/Badge */}
+            <div className="inline-block bg-[#001f5b] text-white font-bold px-5 py-2 rounded-sm text-xs md:text-sm mb-6 tracking-widest uppercase shadow-md">
+              GCCI Elections 2026–2028
             </div>
+            
+            {/* Primary Headline */}
+            <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-black text-[#001f5b] tracking-tight leading-none mb-3 drop-shadow-sm uppercase">
+              Vote For <br />
+              <span className="text-[#1877F2]">Business Group</span>
+            </h1>
+            
+            {/* Sub Headline */}
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-6">
+              Rana Muhammad Farhan Asghar <br className="md:hidden" />
+              <span className="font-medium text-lg md:text-2xl text-gray-600">As Executive Member</span>
+            </h2>
+            
+            {/* Tagline */}
+            <p className="font-sans text-gray-700 text-lg md:text-xl font-medium max-w-2xl mb-10 leading-relaxed italic">
+              "Together We Stand, Together We Rise."
+            </p>
+            
+            {/* Call to Action */}
+            <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-xs md:text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 transition-all duration-300">
+              Retrieve Your Data Now
+            </a>
           </div>
         </section>
 
@@ -414,7 +410,7 @@ export default function App() {
             >
               <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
                 <iframe 
-                  src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FBusinessGroupGCCI&tabs=timeline&width=${fbWidth}&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`}
+                  src={`https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fprofile.php%3Fid%3D61577872561636&tabs=timeline&width=${fbWidth}&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`}
                   width={fbWidth + 24} height="600" style={{ border: 'none', width: `${fbWidth + 24}px`, maxWidth: 'none' }} scrolling="no" frameBorder="0" allowFullScreen={true} allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" title="Business Group Facebook Feed"
                 ></iframe>
               </div>
@@ -531,7 +527,6 @@ export default function App() {
                             </div>
 
                             <div className="flex items-center gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                               {/* FIXED: Removed the / from farhan.jpeg */}
                                <img src="farhan.jpeg" alt="Rana Farhan Asghar" className="w-14 h-14 rounded-full object-cover border-2 border-brand-primary bg-white" />
                                <div>
                                   <h4 className="font-bold text-brand-dark text-lg">Vote for Rana Farhan Asghar</h4>

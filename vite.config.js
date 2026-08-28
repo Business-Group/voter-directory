@@ -1,8 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import Sitemap from 'vite-plugin-sitemap'
 
-// Replace 'voter-directory' with your exact GitHub repository name
 export default defineConfig({
-  plugins: [react()],
-  base: '/', 
+  base: '/',
+  plugins: [
+    react(),
+    Sitemap({
+      hostname: 'https://votebusinessgroup.pk',
+      readable: true
+    })
+  ]
 })
