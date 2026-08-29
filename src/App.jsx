@@ -265,24 +265,23 @@ export default function App() {
         </div>
         {/* ========================================= */}
 
-        {/* 2. HERO SECTION (Client Poster for Mobile, Wide Image for Desktop) */}
+        {/* 2. HERO SECTION */}
         <section className="relative w-full bg-white overflow-hidden no-print flex flex-col border-b border-gray-200">
           
           {/* IMAGE CONTAINER */}
           <div className="w-full relative flex flex-col items-center bg-[#e4eff6] md:bg-[#74c0e8]">
             
-            {/* 📱 MOBILE IMAGE: frontal-final.jfif (Client Approved Poster) */}
+            {/* 📱 MOBILE IMAGE: frontal-final.jfif */}
             <img 
               src="frontal-final.jfif" 
-              alt="Business Group Leaders Mobile Poster" 
+              alt="Business Group Candidates GCCI 2026-28: Rana Farhan Asghar, Waqas Afzal Mughal, Ghulam Hussain Judge, Mian Umer Saleem, Rana Saddique Khan" 
               className="w-full h-auto object-contain md:hidden drop-shadow-sm"
             />
 
-            {/* 💻 DESKTOP IMAGE: frontal5.jfif */}
-            {/* FIXED: Changed to object-cover to force edge-to-edge stretching on ultrawide monitors */}
+            {/* 💻 DESKTOP IMAGE: Reverted back to frontal5.jfif with original styling */}
             <img 
               src="frontal5.jfif" 
-              alt="Business Group Leaders Desktop" 
+              alt="Business Group Candidates GCCI 2026-28: Rana Farhan Asghar, Waqas Afzal Mughal, Ghulam Hussain Judge, Mian Umer Saleem, Rana Saddique Khan" 
               className="hidden md:block w-full h-auto max-h-[85vh] object-cover object-bottom drop-shadow-md"
             />
           </div>
@@ -290,12 +289,12 @@ export default function App() {
           {/* TEXT CONTENT */}
           <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-8 md:pt-12 flex flex-col items-center text-center bg-white">
             
-            {/* 🌟 QURANIC VERSE (Visible on ALL screens) */}
+            {/* 🌟 QURANIC VERSE */}
             <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 md:mb-6 drop-shadow-sm">
               نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
             </h3>
             
-            {/* DESKTOP-ONLY TEXT (Hidden on mobile to avoid repeating the poster's text) */}
+            {/* DESKTOP-ONLY TEXT */}
             <div className="hidden md:flex flex-col items-center">
               <div className="inline-block bg-[#001f5b] text-white font-bold px-5 py-2 rounded-sm text-xs md:text-sm mb-6 tracking-widest uppercase shadow-md">
                 GCCI Elections 2026–2028
@@ -317,7 +316,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* CALL TO ACTION BUTTON (Visible on BOTH Mobile and Desktop) */}
+          {/* CALL TO ACTION BUTTON */}
           <div className="w-full bg-white pb-10 md:pb-16 flex justify-center z-20">
              <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 active:scale-95 transition-all duration-300">
               Retrieve Your Data Now
@@ -389,7 +388,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* 5. FACEBOOK POSTS FEED (Scrollbar Clipped Iframe) */}
+        {/* 5. FACEBOOK POSTS FEED */}
         <section id="news" className="w-full bg-white px-0 md:px-6 py-16 md:py-20 border-t border-gray-100 no-print">
           <div className="max-w-7xl mx-auto flex flex-col items-center">
             <div className="flex flex-col items-center text-center mb-10 md:mb-12 px-6">
@@ -464,9 +463,6 @@ export default function App() {
                   return (
                     <div key={index} className={`p-2 md:p-3 transition-all duration-300 ${isExpanded ? 'w-full flex-shrink-0' : 'w-full md:w-1/2 lg:w-1/3 no-print'}`}>
                       {isExpanded ? (
-                        // ==========================================
-                        // EXPANDED PRINTABLE RECORD VIEW
-                        // ==========================================
                         <div id="print-area" className="w-full bg-white rounded-xl shadow-lg border border-brand-primary overflow-hidden print:shadow-none print:border-none font-sans relative transition-all duration-300">
                           
                           <div className="hidden print:block px-8 py-6 pb-0">
@@ -559,9 +555,6 @@ export default function App() {
                           </div>
                         </div>
                       ) : (
-                        // ==========================================
-                        // STANDARD SMALL CARD VIEW
-                        // ==========================================
                         <div 
                           className="bg-white rounded-xl flex flex-col transition-all cursor-pointer border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-sky"
                           onClick={() => toggleExpand(index)}
