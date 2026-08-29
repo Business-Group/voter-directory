@@ -265,65 +265,61 @@ export default function App() {
         </div>
         {/* ========================================= */}
 
-        {/* 2. HERO SECTION (Responsive Images: Mobile vs Desktop) */}
+        {/* 2. HERO SECTION (Client Poster for Mobile, Wide Image for Desktop) */}
         <section className="relative w-full bg-white overflow-hidden no-print flex flex-col border-b border-gray-200">
           
           {/* IMAGE CONTAINER */}
-          {/* Dynamic height scales smoothly from phones up to 4K desktop monitors */}
-          <div className="w-full h-[350px] sm:h-[450px] md:h-[500px] lg:h-[600px] xl:h-[700px] relative bg-[#82cbed]">
+          <div className="w-full relative flex flex-col items-center bg-[#e4eff6] md:bg-[#74c0e8]">
             
-            {/* 📱 MOBILE IMAGE: frontal4.jpg */}
-            {/* Shows by default, hides on medium (md) screens and larger */}
+            {/* 📱 MOBILE IMAGE: frontal-final.jfif (Client Approved Poster) */}
+            {/* Using w-full and h-auto so the poster scales perfectly without cutting off any text */}
             <img 
-              src="frontal4.jpg" 
-              alt="Business Group Leaders Mobile" 
-              className="w-full h-full object-cover object-bottom md:hidden drop-shadow-md"
+              src="frontal-final.jfif" 
+              alt="Business Group Leaders Mobile Poster" 
+              className="w-full h-auto object-contain md:hidden drop-shadow-sm"
             />
 
             {/* 💻 DESKTOP IMAGE: frontal5.jfif */}
-            {/* Hidden by default, shows on medium (md) screens and larger */}
             <img 
               src="frontal5.jfif" 
               alt="Business Group Leaders Desktop" 
-              className="hidden md:block w-full h-full object-cover object-bottom drop-shadow-md"
+              className="hidden md:block w-full h-auto max-h-[85vh] object-contain object-bottom drop-shadow-md"
             />
           </div>
 
-          {/* TEXT CONTENT (Centered below the image) */}
-          <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 flex flex-col items-center text-center bg-white">
+          {/* TEXT CONTENT (Hidden on mobile to avoid repeating the poster's text, visible on Desktop) */}
+          <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-12 pb-6 md:py-16 hidden md:flex flex-col items-center text-center bg-white">
             
-            {/* Arabic Verse */}
             <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 drop-shadow-sm">
               نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
             </h3>
             
-            {/* Tag/Badge */}
             <div className="inline-block bg-[#001f5b] text-white font-bold px-5 py-2 rounded-sm text-xs md:text-sm mb-6 tracking-widest uppercase shadow-md">
               GCCI Elections 2026–2028
             </div>
             
-            {/* Primary Headline */}
             <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-black text-[#001f5b] tracking-tight leading-none mb-3 drop-shadow-sm uppercase">
               Vote For <br />
               <span className="text-[#1877F2]">Business Group</span>
             </h1>
             
-            {/* Sub Headline */}
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-6">
               Rana Muhammad Farhan Asghar <br className="md:hidden" />
               <span className="font-medium text-lg md:text-2xl text-gray-600">As Executive Member</span>
             </h2>
             
-            {/* Tagline */}
             <p className="font-sans text-gray-700 text-lg md:text-xl font-medium max-w-2xl mb-10 leading-relaxed italic">
               "Together We Stand, Together We Rise."
             </p>
-            
-            {/* Call to Action */}
-            <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-xs md:text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 transition-all duration-300">
+          </div>
+
+          {/* CALL TO ACTION BUTTON (Visible on BOTH Mobile and Desktop) */}
+          <div className="w-full bg-white py-8 md:py-0 md:pb-16 flex justify-center z-20">
+             <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 active:scale-95 transition-all duration-300">
               Retrieve Your Data Now
             </a>
           </div>
+
         </section>
 
         {/* 3. CORE VALUES */}
