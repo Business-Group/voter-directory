@@ -70,18 +70,26 @@ export default function App() {
         query = query.ilike('MEMBER_CLASS', `%${filterClass[0]}%`);
       }
       
-      // 1. Strip spaces and dashes from user input for clean comparison
+      // 1. STANDARD TEXT SEARCH (Names, Companies, MSNO)
+      const standardWildcard = `%${searchValue}%`;
+      let exactSearchQuery = `REPRESENTATIVE_NAME.ilike.${standardWildcard},COMPANY_NAME.ilike.${standardWildcard},MSNO.ilike.${standardWildcard}`;
+
+      // 2. ROBUST NUMERIC REGEX SEARCH (CNIC, NTN, Phones)
       const cleanSearch = searchValue.replace(/[-\s]/g, '');
       
-      // 2. Create a "fuzzy" wildcard string (e.g. "123" becomes "%1%2%3%")
-      // This bypasses any random spaces or dashes present in the database cells
-      const fuzzyNumeric = '%' + cleanSearch.split('').join('%') + '%';
-      
-      // 3. Standard wildcard for name and company text
-      const standardWildcard = `%${searchValue}%`;
-      
-      // Build the multi-column OR query using the specific logic for text vs numbers
-      const exactSearchQuery = `REPRESENTATIVE_NAME.ilike.${standardWildcard},COMPANY_NAME.ilike.${standardWildcard},MSNO.ilike.${standardWildcard},CNIC.ilike.${fuzzyNumeric},NTN.ilike.${fuzzyNumeric},CONTACT_1.ilike.${fuzzyNumeric},CONTACT_2.ilike.${fuzzyNumeric}`;
+      // If the user typed purely numbers, activate the POSIX Regex Logic
+      if (cleanSearch.length > 0 && /^\d+$/.test(cleanSearch)) {
+        
+        // Turns "107" into "1[^0-9]*0[^0-9]*7" 
+        // This database command means: Find 1, ignore non-digits, find 0, ignore non-digits, find 7.
+        const regexPattern = cleanSearch.split('').join('[^0-9]*');
+        
+        // 'imatch' is Supabase's operator for PostgreSQL Regular Expressions
+        exactSearchQuery += `,CNIC.imatch.${regexPattern},NTN.imatch.${regexPattern},CONTACT_1.imatch.${regexPattern},CONTACT_2.imatch.${regexPattern}`;
+      } else {
+        // Fallback for standard exact search if they included letters
+        exactSearchQuery += `,CNIC.ilike.${standardWildcard},NTN.ilike.${standardWildcard},CONTACT_1.ilike.${standardWildcard},CONTACT_2.ilike.${standardWildcard}`;
+      }
 
       query = query.or(exactSearchQuery).limit(50);
       
@@ -288,14 +296,14 @@ export default function App() {
           {/* IMAGE CONTAINER */}
           <div className="w-full relative flex flex-col items-center bg-[#e4eff6] md:bg-[#74c0e8]">
             
-            {/* 📱 MOBILE IMAGE: frontal-final.jfif */}
+            {/* 📱 MOBILE IMAGE */}
             <img 
               src="frontal-final.jfif" 
               alt="Business Group Candidates GCCI 2026-28: Rana Farhan Asghar, Waqas Afzal Mughal, Ghulam Hussain Judge, Mian Umer Saleem, Rana Saddique Khan" 
               className="w-full h-auto object-contain md:hidden drop-shadow-sm"
             />
 
-            {/* 💻 DESKTOP IMAGE: Reverted back to frontal5.jfif with original styling */}
+            {/* 💻 DESKTOP IMAGE */}
             <img 
               src="frontal5.jfif" 
               alt="Business Group Candidates GCCI 2026-28: Rana Farhan Asghar, Waqas Afzal Mughal, Ghulam Hussain Judge, Mian Umer Saleem, Rana Saddique Khan" 
@@ -306,12 +314,10 @@ export default function App() {
           {/* TEXT CONTENT */}
           <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-8 md:pt-12 flex flex-col items-center text-center bg-white">
             
-            {/* 🌟 QURANIC VERSE */}
             <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 md:mb-6 drop-shadow-sm">
               نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
             </h3>
             
-            {/* DESKTOP-ONLY TEXT */}
             <div className="hidden md:flex flex-col items-center">
               <div className="inline-block bg-[#001f5b] text-white font-bold px-5 py-2 rounded-sm text-xs md:text-sm mb-6 tracking-widest uppercase shadow-md">
                 GCCI Elections 2026–2028
@@ -333,7 +339,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* CALL TO ACTION BUTTON */}
           <div className="w-full bg-white pb-10 md:pb-16 flex justify-center z-20">
              <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 active:scale-95 transition-all duration-300">
               Retrieve Your Data Now
