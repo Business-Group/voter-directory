@@ -67,10 +67,21 @@ export default function App() {
       let query = supabase.from('voters').select('*');
       
       if (filterClass !== 'All') {
-        query = query.ilike('Member Class', `%${filterClass[0]}%`);
+        query = query.ilike('MEMBER_CLASS', `%${filterClass[0]}%`);
       }
       
-      const exactSearchQuery = `owner.eq.${searchValue},CNIC.eq.${searchValue},NTN.eq.${searchValue},Member.eq.${searchValue},"Contact 1".eq.${searchValue}`;
+      // 1. Strip spaces and dashes from user input for clean comparison
+      const cleanSearch = searchValue.replace(/[-\s]/g, '');
+      
+      // 2. Create a "fuzzy" wildcard string (e.g. "123" becomes "%1%2%3%")
+      // This bypasses any random spaces or dashes present in the database cells
+      const fuzzyNumeric = '%' + cleanSearch.split('').join('%') + '%';
+      
+      // 3. Standard wildcard for name and company text
+      const standardWildcard = `%${searchValue}%`;
+      
+      // Build the multi-column OR query using the specific logic for text vs numbers
+      const exactSearchQuery = `REPRESENTATIVE_NAME.ilike.${standardWildcard},COMPANY_NAME.ilike.${standardWildcard},MSNO.ilike.${standardWildcard},CNIC.ilike.${fuzzyNumeric},NTN.ilike.${fuzzyNumeric},CONTACT_1.ilike.${fuzzyNumeric},CONTACT_2.ilike.${fuzzyNumeric}`;
 
       query = query.or(exactSearchQuery).limit(50);
       
@@ -95,6 +106,12 @@ export default function App() {
 
   const toggleExpand = (index) => {
     setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
+  // Helper function to handle 'NULL' text strings from database
+  const renderValue = (val) => {
+    if (!val || val === 'NULL' || val === 'null' || val === '') return 'N/A';
+    return val;
   };
 
   return (
@@ -423,7 +440,7 @@ export default function App() {
             
             <div className="flex flex-col items-center text-center mb-10 md:mb-12 no-print">
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-brand-dark mb-3">Voter Directory</h2>
-              <p className="text-gray-600 max-w-2xl font-sans text-sm md:text-base px-4">Search the official registry to confirm your details. Filter by class or search by Name, CNIC, NTN, or Member No.</p>
+              <p className="text-gray-600 max-w-2xl font-sans text-sm md:text-base px-4">Search the official registry to confirm your details. Filter by class or search by Name, CNIC, NTN, or MSNO.</p>
             </div>
             
             <div className="flex flex-col lg:flex-row w-full mb-8 md:mb-12 bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden no-print">
@@ -431,7 +448,7 @@ export default function App() {
                 <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 <input 
                   type="text" 
-                  placeholder="Search Name, CNIC, NTN, or Member No..." 
+                  placeholder="Search Name, CNIC, NTN, Phone or MSNO..." 
                   value={searchTerm} 
                   onChange={(e) => setSearchTerm(e.target.value)} 
                   className="w-full p-4 md:p-5 outline-none text-gray-700 font-sans text-sm md:text-base placeholder-gray-400 bg-transparent" 
@@ -472,12 +489,12 @@ export default function App() {
                           <div className="p-6 md:p-8">
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 relative">
                               <div className="pr-32 md:pr-40">
-                                <h3 className="text-2xl md:text-3xl font-bold text-gray-800">{voter.owner || 'N/A'}</h3>
-                                <p className="text-brand-primary font-medium text-sm md:text-base mt-1">{voter.company || 'N/A'}</p>
+                                <h3 className="text-2xl md:text-3xl font-bold text-gray-800">{renderValue(voter.REPRESENTATIVE_NAME)}</h3>
+                                <p className="text-brand-primary font-medium text-sm md:text-base mt-1">{renderValue(voter.COMPANY_NAME)}</p>
                               </div>
                               
                               <div className="absolute top-0 right-0 border-[3px] border-[#cda03f] rounded-lg px-4 md:px-6 py-2 transform rotate-6 bg-white shadow-sm text-center print:border-gray-800 print:text-gray-800">
-                                <div className="text-[#cda03f] print:text-gray-800 font-black text-lg md:text-xl leading-none">{voter['Member Class'] || 'A'} CLASS</div>
+                                <div className="text-[#cda03f] print:text-gray-800 font-black text-lg md:text-xl leading-none">{renderValue(voter.MEMBER_CLASS)}</div>
                                 <div className="text-[#cda03f] print:text-gray-800 text-[8px] md:text-[10px] tracking-[0.2em] font-bold mt-1 uppercase">Registered Voter</div>
                               </div>
                             </div>
@@ -485,41 +502,41 @@ export default function App() {
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 border-t border-b border-gray-200 py-6 mb-6">
                                <div className="flex flex-col">
                                  <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Serial No.</span>
-                                 <span className="text-base font-medium text-gray-800">{voter.serial_no || 'N/A'}</span>
+                                 <span className="text-base font-medium text-gray-800">{renderValue(voter.Sr_no)}</span>
                                </div>
                                <div className="flex flex-col">
-                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Membership No.</span>
-                                 <span className="text-base font-medium text-gray-800">{voter.Member || 'N/A'}</span>
+                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">MSNO</span>
+                                 <span className="text-base font-medium text-gray-800">{renderValue(voter.MSNO)}</span>
                                </div>
                                <div className="flex flex-col">
-                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Sector</span>
-                                 <span className="text-base font-medium text-gray-800">{voter.Sector || 'N/A'}</span>
+                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Contact 1</span>
+                                 <span className="text-base font-medium text-gray-800 font-mono">{renderValue(voter.CONTACT_1)}</span>
                                </div>
                                <div className="flex flex-col">
-                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">City</span>
-                                 <span className="text-base font-medium text-gray-800">{voter.City || 'N/A'}</span>
-                               </div>
-                               <div className="flex flex-col">
-                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Contact</span>
-                                 <span className="text-base font-medium text-gray-800 font-mono">{voter['Contact 1'] || 'N/A'}</span>
+                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Contact 2</span>
+                                 <span className="text-base font-medium text-gray-800 font-mono">{renderValue(voter.CONTACT_2)}</span>
                                </div>
                                <div className="flex flex-col">
                                  <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">CNIC</span>
-                                 <span className="text-base font-medium text-gray-800 font-mono">{voter.CNIC || 'N/A'}</span>
+                                 <span className="text-base font-medium text-gray-800 font-mono">{renderValue(voter.CNIC)}</span>
                                </div>
                                <div className="flex flex-col">
                                  <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">NTN</span>
-                                 <span className="text-base font-medium text-gray-800 font-mono">{voter.NTN || 'N/A'}</span>
+                                 <span className="text-base font-medium text-gray-800 font-mono">{renderValue(voter.NTN)}</span>
                                </div>
                                <div className="flex flex-col">
-                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">Area</span>
-                                 <span className="text-base font-medium text-gray-800">{voter.Area || 'N/A'}</span>
+                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">GST</span>
+                                 <span className="text-base font-medium text-gray-800 font-mono">{renderValue(voter.GST)}</span>
+                               </div>
+                               <div className="flex flex-col">
+                                 <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1">City</span>
+                                 <span className="text-base font-medium text-gray-800">{renderValue(voter.CITY)}</span>
                                </div>
                             </div>
 
                             <div className="mb-6 border-b border-gray-200 pb-6">
                                <span className="text-xs text-gray-400 font-bold tracking-wider uppercase mb-1 block">Business Address</span>
-                               <span className="text-base font-medium text-gray-800">{voter.Address || 'N/A'}</span>
+                               <span className="text-base font-medium text-gray-800">{renderValue(voter.ADDRESS)}</span>
                             </div>
 
                             <div className="flex items-center gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
@@ -533,7 +550,7 @@ export default function App() {
 
                           <div className="bg-gray-50 px-6 py-4 flex flex-wrap gap-4 no-print border-t border-gray-200">
                             <button 
-                              onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(`Record: ${voter.owner} - Serial: ${voter.serial_no}`); alert('Copied to clipboard!'); }} 
+                              onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(`Record: ${renderValue(voter.REPRESENTATIVE_NAME)} - Serial: ${renderValue(voter.Sr_no)}`); alert('Copied to clipboard!'); }} 
                               className="px-5 py-2 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition text-sm flex items-center"
                             >
                               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
@@ -560,29 +577,29 @@ export default function App() {
                           onClick={() => toggleExpand(index)}
                         >
                           <div className="px-5 py-4 md:px-6 md:py-5 flex justify-between items-start border-b border-gray-100">
-                            <span className="font-heading font-bold text-gray-800 text-base md:text-lg leading-tight pr-3">
-                              {voter.company || 'GCCI Corp'}
+                            <span className="font-heading font-bold text-gray-800 text-base md:text-lg leading-tight pr-3 truncate block">
+                              {renderValue(voter.COMPANY_NAME) || 'GCCI Corp'}
                             </span>
                             <span className={`text-[10px] md:text-xs font-bold px-2 py-1 md:px-3 md:py-1 rounded-full whitespace-nowrap ${
-                              voter['Member Class'] === 'A Class' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
+                              voter.MEMBER_CLASS === 'A Class' ? 'bg-blue-100 text-blue-700' : 'bg-emerald-100 text-emerald-700'
                             }`}>
-                              {voter['Member Class'] || 'Class'}
+                              {renderValue(voter.MEMBER_CLASS) || 'Class'}
                             </span>
                           </div>
                           
                           <div className="p-5 md:p-6 flex flex-col font-sans text-xs md:text-sm">
                             <div className="mb-4">
-                              <span className="block text-gray-400 text-[10px] md:text-xs uppercase tracking-wider mb-1">Owner Name</span> 
-                              <span className="text-gray-800 font-medium text-sm md:text-base">{voter.owner || 'N/A'}</span>
+                              <span className="block text-gray-400 text-[10px] md:text-xs uppercase tracking-wider mb-1">Rep Name</span> 
+                              <span className="text-gray-800 font-medium text-sm md:text-base">{renderValue(voter.REPRESENTATIVE_NAME)}</span>
                             </div>
                             <div className="flex justify-between items-center">
                               <div>
                                 <span className="block text-gray-400 text-[10px] md:text-xs uppercase tracking-wider mb-1">CNIC</span> 
-                                <span className="text-gray-600 font-mono">{voter.CNIC || 'N/A'}</span>
+                                <span className="text-gray-600 font-mono">{renderValue(voter.CNIC)}</span>
                               </div>
                               <div className="text-right">
                                  <span className="block text-gray-400 text-[10px] md:text-xs uppercase tracking-wider mb-1">Serial</span>
-                                 <span className="text-gray-800 font-medium">#{voter.serial_no || '000'}</span>
+                                 <span className="text-gray-800 font-medium">#{renderValue(voter.Sr_no)}</span>
                               </div>
                             </div>
                           </div>
