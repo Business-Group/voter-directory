@@ -77,17 +77,10 @@ export default function App() {
       // 2. ROBUST NUMERIC REGEX SEARCH (CNIC, NTN, Phones)
       const cleanSearch = searchValue.replace(/[-\s]/g, '');
       
-      // If the user typed purely numbers, activate the POSIX Regex Logic
       if (cleanSearch.length > 0 && /^\d+$/.test(cleanSearch)) {
-        
-        // Turns "107" into "1[^0-9]*0[^0-9]*7" 
-        // This database command means: Find 1, ignore non-digits, find 0, ignore non-digits, find 7.
         const regexPattern = cleanSearch.split('').join('[^0-9]*');
-        
-        // 'imatch' is Supabase's operator for PostgreSQL Regular Expressions
         exactSearchQuery += `,CNIC.imatch.${regexPattern},NTN.imatch.${regexPattern},CONTACT_1.imatch.${regexPattern},CONTACT_2.imatch.${regexPattern}`;
       } else {
-        // Fallback for standard exact search if they included letters
         exactSearchQuery += `,CNIC.ilike.${standardWildcard},NTN.ilike.${standardWildcard},CONTACT_1.ilike.${standardWildcard},CONTACT_2.ilike.${standardWildcard}`;
       }
 
@@ -116,7 +109,6 @@ export default function App() {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  // Helper function to handle 'NULL' text strings from database
   const renderValue = (val) => {
     if (!val || val === 'NULL' || val === 'null' || val === '') return 'N/A';
     return val;
@@ -124,15 +116,14 @@ export default function App() {
 
   return (
     <>
-      {/* GLOBAL SCROLLBAR, PRINT & ANIMATION CSS */}
       <style>
         {`
-          /* Hide scrollbar for Chrome, Safari and Opera */
           ::-webkit-scrollbar { display: none; }
-          /* Hide scrollbar for IE, Edge and Firefox */
           * { -ms-overflow-style: none; scrollbar-width: none; }
+          
+          /* Prevent any accidental horizontal scrolling system-wide */
+          body { overflow-x: hidden; }
 
-          /* ANNOUNCEMENT BAR SCROLL ANIMATION */
           @keyframes marquee {
             0% { transform: translateX(100vw); }
             100% { transform: translateX(-100%); }
@@ -143,7 +134,6 @@ export default function App() {
             animation: marquee 45s linear infinite; 
           }
 
-          /* FAST TEXT BLINK ANIMATION */
           @keyframes fast-blink {
             0%, 100% { opacity: 1; }
             50% { opacity: 0; }
@@ -152,7 +142,6 @@ export default function App() {
             animation: fast-blink 0.7s ease-in-out infinite; 
           }
 
-          /* PRINT LOGIC: Hide everything except the designated print-area */
           @media print {
             body * { visibility: hidden; }
             #print-area, #print-area * { visibility: visible; }
@@ -170,7 +159,6 @@ export default function App() {
         `}
       </style>
 
-      {/* 0. INITIAL PRELOADER SCREEN */}
       {showPreloader && (
         <div 
           className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#fafbfc] transition-opacity duration-500 ease-in-out ${
@@ -212,27 +200,24 @@ export default function App() {
         </div>
       )}
 
-      {/* MAIN APPLICATION CONTENT */}
-      <div className="min-h-screen bg-[#fafbfc] text-gray-800 flex flex-col w-full font-sans relative">
+      {/* MAIN APPLICATION CONTENT: Added overflow-x-hidden here to permanently fix the horizontal white bar issue */}
+      <div className="min-h-screen bg-[#fafbfc] text-gray-800 flex flex-col w-full font-sans relative overflow-x-hidden">
         
         {/* =========================================
-            BOTTOM FLOATING BADGE (Only Text Blinks)
+            BOTTOM FLOATING BADGE 
+            (Raised to bottom-12 to clear mobile UI safely)
             ========================================= */}
-        <div className="fixed bottom-6 md:bottom-8 left-0 w-full z-[100] no-print pointer-events-none flex justify-center px-4">
-          <div className="bg-red-600 border border-red-700 shadow-[0_8px_30px_rgba(220,38,38,0.4)] px-6 md:px-10 py-3 rounded-full pointer-events-auto flex items-center justify-center">
-            <span className="font-heading font-black text-white text-base md:text-xl uppercase tracking-widest animate-fast-blink drop-shadow-md">
+        <div className="fixed bottom-12 md:bottom-8 left-1/2 transform -translate-x-1/2 z-[100] w-[90%] md:w-auto max-w-sm no-print pointer-events-none flex justify-center">
+          <div className="w-full bg-red-600 border border-red-700 shadow-[0_8px_30px_rgba(220,38,38,0.5)] px-4 md:px-10 py-3 rounded-full pointer-events-auto flex items-center justify-center">
+            <span className="font-heading font-black text-white text-sm md:text-xl uppercase tracking-widest animate-fast-blink drop-shadow-md whitespace-nowrap text-center">
               Voting Day: 19th September
             </span>
           </div>
         </div>
         {/* ========================================= */}
 
-        {/* =========================================
-            STICKY NAVIGATION & ANNOUNCEMENT WRAPPER 
-            ========================================= */}
         <div className="sticky top-0 z-50 w-full flex flex-col shadow-sm no-print">
           
-          {/* 0.5. SCROLLING ANNOUNCEMENT BAR */}
           <div className="w-full bg-[#0d2136] text-[#cda03f] overflow-hidden py-2 border-b border-[#cda03f]/30">
             <div className="animate-marquee font-heading font-bold tracking-widest text-xs md:text-sm uppercase flex items-center">
               <span className="mx-8 whitespace-nowrap">IN SHA ALLAH</span>
@@ -249,30 +234,20 @@ export default function App() {
             </div>
           </div>
 
-          {/* 1. HEADER / NAVBAR */}
           <header className="w-full bg-[#d4d4d4] text-gray-800 flex flex-col md:flex-row justify-between items-center px-4 md:px-8 py-3 md:py-4 border-b-4 border-brand-gold">
-            
-            {/* LOGO, TITLE, AND ELECTION TEXT */}
             <div className="flex items-center mb-3 md:mb-0 w-full md:w-auto justify-center md:justify-start">
               <img src="logo.png" alt="Business Group Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain rounded-full mr-2 md:mr-3" />
-              
               <div className="flex items-center">
-                {/* Title */}
                 <div className="font-heading font-bold text-xl md:text-2xl tracking-tight text-brand-dark whitespace-nowrap">
                   Business <span className="text-brand-primary">Group</span>
                 </div>
-                
-                {/* Vertical Bar Separator */}
                 <div className="mx-2 md:mx-4 h-5 md:h-7 w-[2px] bg-gray-400 rounded-full"></div>
-                
-                {/* Election Text */}
                 <div className="font-sans font-bold text-xs md:text-sm text-gray-600 uppercase tracking-wide whitespace-nowrap pt-1">
                   Election 2026-2028
                 </div>
               </div>
             </div>
 
-            {/* NAVIGATION & SOCIALS */}
             <nav className="flex items-center justify-center space-x-4 md:space-x-6 w-full md:w-auto">
               <div className="flex items-center space-x-3 md:space-x-4 border-r-2 border-gray-400 pr-4 md:pr-6">
                 <a href="https://www.facebook.com/profile.php?id=61577872561636" target="_blank" rel="noreferrer" className="hover:scale-110 transition-transform">
@@ -309,22 +284,14 @@ export default function App() {
             </nav>
           </header>
         </div>
-        {/* ========================================= */}
 
-        {/* 2. HERO SECTION */}
         <section className="relative w-full bg-white overflow-hidden no-print flex flex-col border-b border-gray-200">
-          
-          {/* IMAGE CONTAINER */}
           <div className="w-full relative flex flex-col items-center bg-[#e4eff6] md:bg-[#74c0e8]">
-            
-            {/* 📱 MOBILE IMAGE */}
             <img 
               src="frontal-final.jfif" 
               alt="Business Group Candidates GCCI 2026-28: Rana Farhan Asghar, Waqas Afzal Mughal, Ghulam Hussain Judge, Mian Umer Saleem, Rana Saddique Khan" 
               className="w-full h-auto object-contain md:hidden drop-shadow-sm"
             />
-
-            {/* 💻 DESKTOP IMAGE */}
             <img 
               src="frontal5.jfif" 
               alt="Business Group Candidates GCCI 2026-28: Rana Farhan Asghar, Waqas Afzal Mughal, Ghulam Hussain Judge, Mian Umer Saleem, Rana Saddique Khan" 
@@ -332,9 +299,7 @@ export default function App() {
             />
           </div>
 
-          {/* TEXT CONTENT */}
           <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-8 md:pt-12 flex flex-col items-center text-center bg-white">
-            
             <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 md:mb-6 drop-shadow-sm">
               نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
             </h3>
@@ -343,17 +308,14 @@ export default function App() {
               <div className="inline-block bg-[#001f5b] text-white font-bold px-5 py-2 rounded-sm text-xs md:text-sm mb-6 tracking-widest uppercase shadow-md">
                 GCCI Elections 2026–2028
               </div>
-              
               <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-black text-[#001f5b] tracking-tight leading-none mb-3 drop-shadow-sm uppercase">
                 Vote For <br />
                 <span className="text-[#1877F2]">Business Group</span>
               </h1>
-              
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-6">
                 Rana Muhammad Farhan Asghar <br className="md:hidden" />
                 <span className="font-medium text-lg md:text-2xl text-gray-600">As Executive Member</span>
               </h2>
-              
               <p className="font-sans text-gray-700 text-lg md:text-xl font-medium max-w-2xl mb-8 leading-relaxed italic">
                 "Together We Stand, Together We Rise."
               </p>
@@ -365,10 +327,8 @@ export default function App() {
               Retrieve Your Data Now
             </a>
           </div>
-
         </section>
 
-        {/* 3. CORE VALUES */}
         <section className="w-full flex flex-col md:flex-row bg-white no-print">
           <div className="w-full md:w-1/3 p-8 md:p-12 flex flex-col items-center text-center bg-gradient-to-br from-brand-dark to-brand-primary text-white relative group overflow-hidden">
             <div className="absolute inset-0 bg-black opacity-10 mix-blend-multiply transition-opacity group-hover:opacity-20"></div>
@@ -408,7 +368,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* 4. MISSION & VISION */}
         <section id="mission" className="w-full max-w-7xl mx-auto px-6 py-16 md:py-20 flex flex-col items-center text-center no-print">
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-brand-dark mb-10">Our Mission & Vision</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-left">
@@ -431,7 +390,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* 5. FACEBOOK POSTS FEED */}
         <section id="news" className="w-full bg-white px-0 md:px-6 py-16 md:py-20 border-t border-gray-100 no-print">
           <div className="max-w-7xl mx-auto flex flex-col items-center">
             <div className="flex flex-col items-center text-center mb-10 md:mb-12 px-6">
@@ -460,7 +418,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* 6. VOTER DIRECTORY */}
         <section id="directory" className="w-full bg-transparent px-6 py-16 md:py-20 border-t border-gray-200">
           <div className="max-w-7xl mx-auto">
             
@@ -645,7 +602,6 @@ export default function App() {
           </div>
         </section>
 
-        {/* 7. FOOTER */}
         <footer className="w-full bg-gray-900 pt-12 md:pt-16 pb-6 md:pb-8 px-4 md:px-6 flex flex-col items-center no-print">
           <h2 className="font-heading font-bold text-xl md:text-2xl text-white mb-6">
             Business <span className="text-brand-sky">Group</span>
