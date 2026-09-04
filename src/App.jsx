@@ -143,6 +143,15 @@ export default function App() {
             animation: marquee 45s linear infinite; 
           }
 
+          /* FAST TEXT BLINK ANIMATION */
+          @keyframes fast-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+          }
+          .animate-fast-blink {
+            animation: fast-blink 0.7s ease-in-out infinite; 
+          }
+
           /* PRINT LOGIC: Hide everything except the designated print-area */
           @media print {
             body * { visibility: hidden; }
@@ -204,8 +213,20 @@ export default function App() {
       )}
 
       {/* MAIN APPLICATION CONTENT */}
-      <div className="min-h-screen bg-[#fafbfc] text-gray-800 flex flex-col w-full font-sans">
+      <div className="min-h-screen bg-[#fafbfc] text-gray-800 flex flex-col w-full font-sans relative">
         
+        {/* =========================================
+            BOTTOM FLOATING BADGE (Only Text Blinks)
+            ========================================= */}
+        <div className="fixed bottom-0 left-0 w-full z-[100] no-print pointer-events-none flex justify-center pb-4 md:pb-6">
+          <div className="bg-red-600 border border-red-700 shadow-[0_8px_30px_rgba(220,38,38,0.4)] px-6 md:px-10 py-3 rounded-full pointer-events-auto flex items-center justify-center">
+            <span className="font-heading font-black text-white text-base md:text-xl uppercase tracking-widest animate-fast-blink drop-shadow-md">
+              Voting Day: 19th September
+            </span>
+          </div>
+        </div>
+        {/* ========================================= */}
+
         {/* =========================================
             STICKY NAVIGATION & ANNOUNCEMENT WRAPPER 
             ========================================= */}
