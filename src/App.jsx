@@ -521,8 +521,8 @@ export default function App() {
                                <img src="farhan.jpeg" alt="Rana Farhan Asghar" className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover border-2 border-brand-primary bg-white flex-shrink-0" />
                                <div>
                                   <h4 className="font-bold text-brand-dark text-sm md:text-lg leading-tight mb-1">
-                                    Stand with Business Group <br className="hidden md:block" />
-                                    <span className="text-[#1877F2]">Vote Rana Farhan Asghar</span>
+                                    Vote for Business Group <br className="hidden md:block" />
+                                    <span className="text-[#1877F2]">Vote for Rana Farhan Asghar</span>
                                   </h4>
                                   <p className="text-gray-600 text-[10px] md:text-sm mt-1 leading-snug">
                                     For Executive Member, GCCI 2026–2028
