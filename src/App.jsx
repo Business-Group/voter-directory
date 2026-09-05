@@ -200,22 +200,8 @@ export default function App() {
         </div>
       )}
 
-      {/* MAIN APPLICATION CONTENT: Added overflow-x-hidden here to permanently fix the horizontal white bar issue */}
       <div className="min-h-screen bg-[#fafbfc] text-gray-800 flex flex-col w-full font-sans relative overflow-x-hidden">
         
-        {/* =========================================
-            BOTTOM FLOATING BADGE 
-            (Raised to bottom-12 to clear mobile UI safely)
-            ========================================= */}
-        <div className="fixed bottom-12 md:bottom-8 left-1/2 transform -translate-x-1/2 z-[100] w-[90%] md:w-auto max-w-sm no-print pointer-events-none flex justify-center">
-          <div className="w-full bg-red-600 border border-red-700 shadow-[0_8px_30px_rgba(220,38,38,0.5)] px-4 md:px-10 py-3 rounded-full pointer-events-auto flex items-center justify-center">
-            <span className="font-heading font-black text-white text-sm md:text-xl uppercase tracking-widest animate-fast-blink drop-shadow-md whitespace-nowrap text-center">
-              Voting Day: 19th September
-            </span>
-          </div>
-        </div>
-        {/* ========================================= */}
-
         <div className="sticky top-0 z-50 w-full flex flex-col shadow-sm no-print">
           
           <div className="w-full bg-[#0d2136] text-[#cda03f] overflow-hidden py-2 border-b border-[#cda03f]/30">
@@ -300,7 +286,7 @@ export default function App() {
           </div>
 
           <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pt-8 md:pt-12 flex flex-col items-center text-center bg-white">
-            <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-4 md:mb-6 drop-shadow-sm">
+            <h3 className="font-heading font-bold text-[#a67b27] text-xl md:text-2xl lg:text-3xl tracking-widest mb-6 drop-shadow-sm">
               نَصْرٌ مِّنَ اللَّهِ وَفَتْحٌ قَرِيبٌ
             </h3>
             
@@ -322,8 +308,16 @@ export default function App() {
             </div>
           </div>
 
-          <div className="w-full bg-white pb-10 md:pb-16 flex justify-center z-20">
-             <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 active:scale-95 transition-all duration-300">
+          <div className="w-full bg-white pb-10 md:pb-16 flex flex-col items-center justify-center z-20 px-4">
+            
+            {/* VOTING DAYS PILL (Embedded above the button) */}
+            <div className="mb-6 bg-red-600 border border-red-700 shadow-[0_4px_15px_rgba(220,38,38,0.3)] px-6 md:px-10 py-3 rounded-full flex items-center justify-center">
+              <span className="font-heading font-black text-white text-sm md:text-lg uppercase tracking-widest animate-fast-blink drop-shadow-md text-center">
+                Voting Days: 19th & 21st September
+              </span>
+            </div>
+
+            <a href="#directory" className="inline-block bg-[#1877F2] text-white font-sans font-bold uppercase text-sm tracking-wider px-10 py-4 rounded-full shadow-xl hover:bg-[#155ebd] hover:scale-105 active:scale-95 transition-all duration-300">
               Retrieve Your Data Now
             </a>
           </div>
@@ -522,13 +516,20 @@ export default function App() {
                                <span className="text-base font-medium text-gray-800">{renderValue(voter.ADDRESS)}</span>
                             </div>
 
-                            <div className="flex items-center gap-4 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                               <img src="farhan.jpeg" alt="Rana Farhan Asghar" className="w-14 h-14 rounded-full object-cover border-2 border-brand-primary bg-white" />
+                            {/* UPDATED ENDORSEMENT BOX */}
+                            <div className="flex items-center gap-4 bg-blue-50 p-4 md:p-5 rounded-xl border border-blue-100">
+                               <img src="farhan.jpeg" alt="Rana Farhan Asghar" className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover border-2 border-brand-primary bg-white flex-shrink-0" />
                                <div>
-                                  <h4 className="font-bold text-brand-dark text-lg">Vote for Rana Farhan Asghar</h4>
-                                  <p className="text-gray-600 text-xs md:text-sm mt-1">For Executive Member, GCCI 2026–2028 · Business Group Gujranwala</p>
+                                  <h4 className="font-bold text-brand-dark text-sm md:text-lg leading-tight mb-1">
+                                    Stand with Business Group <br className="hidden md:block" />
+                                    <span className="text-[#1877F2]">Vote Rana Farhan Asghar</span>
+                                  </h4>
+                                  <p className="text-gray-600 text-[10px] md:text-sm mt-1 leading-snug">
+                                    For Executive Member, GCCI 2026–2028
+                                  </p>
                                </div>
                             </div>
+
                           </div>
 
                           <div className="bg-gray-50 px-6 py-4 flex flex-wrap gap-4 no-print border-t border-gray-200">
